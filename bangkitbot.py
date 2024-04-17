@@ -19,7 +19,11 @@ class BangkitBot(commands.Bot):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.cogslist = [
+            "cogs.channel",
             "cogs.radio",
+            "cogs.role",
+            "cogs.utilities",
+            "cogs.verification",
         ]
 
     async def on_ready(self):
@@ -43,11 +47,21 @@ bot.remove_command("help")
 @bot.tree.command(name="reloadbangkitbot", description="Reloading Cogs File")
 async def reloadbangkitbot(
     interaction: discord.Interaction,
-    cog: Literal["cogs.radio",] = None,
+    cog: Literal[
+        "cogs.channel",
+        "cogs.radio",
+        "cogs.role",
+        "cogs.utilities",
+        "cogs.verification",
+    ] = None,
 ):
     if cog == None:
         for i in [
+            "cogs.channel",
             "cogs.radio",
+            "cogs.role",
+            "cogs.utilities",
+            "cogs.verification",
         ]:
             await bot.reload_extension(name=i)
         await interaction.response.send_message(
@@ -101,6 +115,22 @@ async def bangkitbot(interaction: discord.Interaction):
     await interaction.response.send_message(
         file=thumbnail_file, embed=embed, ephemeral=True
     )
+
+
+### Context Menu ###
+# Repeat Message
+@bot.tree.context_menu(name="Repeat Message")
+async def repeat_message(interaction: discord.Interaction, message: discord.Message):
+    await interaction.response.send_message(
+        f"This is your message: \n{message.author}: {message.content}"
+    )
+
+
+# Get User Avatar
+@bot.tree.context_menu(name="Get User Avatar")
+async def get_avatar(interaction: discord.Interaction, user: discord.Member):
+    bot.add_view(ListeningButton())
+    await interaction.response.send_message(content=user.avatar)
 
 
 bot.run(bot_token)
