@@ -38,7 +38,8 @@ activate
 3.2. Activate the python virtual environment (**Linux**)
 
 ```console
-. bangkitbot/bin/activate
+cd bangkitbot
+. bin/activate
 ```
 
 4. Install the required python packages from requirements.txt
