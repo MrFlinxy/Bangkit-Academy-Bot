@@ -1,7 +1,7 @@
 <div align="center">
 <p>
   <a href="https://grow.google/intl/id_id/bangkit/">
-    <img alt="Bangkit" src="./Assets/bangkit.png" width="360">
+    <img alt="Bangkit" src="./Assets/bangkit_w.png" width="360">
   </a>
 </p>
 <h1>Bangkit Academy Bot</h1>
