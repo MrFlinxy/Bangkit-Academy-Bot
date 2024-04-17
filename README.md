@@ -31,7 +31,6 @@ python3 -m venv bangkitbot
 3.1. Activate the python virtual environment (**Windows**)
 
 ```console
-python -m venv bangkitbot
 cd bangkitbot\Scripts
 activate
 ```
@@ -39,7 +38,6 @@ activate
 3.2. Activate the python virtual environment (**Linux**)
 
 ```console
-python3 -m venv bangkitbot
 . bangkitbot/bin/activate
 ```
 
