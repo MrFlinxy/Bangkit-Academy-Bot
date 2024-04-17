@@ -11,10 +11,13 @@
 ## Pre-requisites
 
 - <a href="https://python.org/">Python3</a> (Developed in Python 3.12.3)
+- <a href="https://git-scm.com/">Git</a>
 - Discord Bot Token (<a href="https://youtu.be/UYJDKSah-Ww?si=klfbiOqFP16M5ms9&t=135">See this tutorial video for setting up Discord Bot</a>)
   \*Note: make sure the bot is inside the Discord Server
 
 ## How to use
+
+#### Windows
 
 1. Clone the repository
 
@@ -22,29 +25,23 @@
 git clone https://github.com/MrFlinxy/Bangkit-Academy-Bot.git
 ```
 
-2. Create python virtual environment
+2 Create python virtual environment
 
 ```console
-python3 -m venv bangkitbot
+python -m venv bangkitbot
 ```
 
-3.1. Activate the python virtual environment (**Windows**)
+3 Activate the python virtual environment
 
 ```console
 cd bangkitbot\Scripts
 activate
 ```
 
-3.2. Activate the python virtual environment (**Linux**)
+4 Install the required python packages from requirements.txt
 
 ```console
-cd bangkitbot
-. bin/activate
-```
-
-4. Install the required python packages from requirements.txt
-
-```console
+cd ../../Bangkit-Academy-Bot
 pip install -r requirements.txt
 ```
 
@@ -54,13 +51,59 @@ pip install -r requirements.txt
 echo TOKEN="<YOUR_BOT_TOKEN>" > .env
 ```
 
-6.1. Run the Bangkit Bot (**Windows**)
+6. Run the Bangkit Bot
 
 ```console
 python bangkitbot.py
 ```
 
-6.2. Run the Bangkit Bot (**Linux**)
+7. Please reload the bot by running the following command inside the Discord server
+
+```console
+/reloadbangkitbot
+```
+
+To see available commands, run the following command inside the Discord server
+
+```console
+/bangkitbot
+```
+
+#### Linux
+
+1. Clone the repository
+
+```console
+git clone https://github.com/MrFlinxy/Bangkit-Academy-Bot.git
+```
+
+2. Create python virtual environment (**Linux**)
+
+```console
+python3 -m venv bangkitbot
+```
+
+3. Activate the python virtual environment (**Linux**)
+
+```console
+cd bangkitbot
+. bin/activate
+```
+
+4. Install the required python packages from requirements.txt (**Linux**)
+
+```console
+cd ../Bangkit-Academy-Bot
+pip install -r requirements.txt
+```
+
+5. Create .env file
+
+```console
+echo TOKEN="<YOUR_BOT_TOKEN>" > .env
+```
+
+6. Run the Bangkit Bot (**Linux**)
 
 ```console
 python3 bangkitbot.py
