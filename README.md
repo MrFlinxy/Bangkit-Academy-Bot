@@ -25,20 +25,20 @@
 git clone https://github.com/MrFlinxy/Bangkit-Academy-Bot.git
 ```
 
-2 Create python virtual environment
+2. Create python virtual environment
 
 ```console
 python -m venv bangkitbot
 ```
 
-3 Activate the python virtual environment
+3. Activate the python virtual environment
 
 ```console
 cd bangkitbot\Scripts
 activate
 ```
 
-4 Install the required python packages from requirements.txt
+4. Install the required python packages from requirements.txt
 
 ```console
 cd ../../Bangkit-Academy-Bot
