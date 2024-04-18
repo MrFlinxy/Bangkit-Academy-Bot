@@ -1,6 +1,6 @@
 import discord
-from discord import app_commands
-from discord.ext import commands
+from discord import app_commands, ui
+from discord.ext import commands, tasks
 
 
 class utilities(commands.Cog):
@@ -55,6 +55,77 @@ class utilities(commands.Cog):
                         await message.delete()
         except:
             pass
+
+
+class RepeatMessage(ui.Modal, title="Repeat Message"):
+    time_interval = ui.TextInput(
+        label="Time Interval (Minutes) - float",
+        style=discord.TextStyle.short,
+        placeholder="0.1",
+        required=True,
+    )
+    number_repetitions = ui.TextInput(
+        label="Number of Repetitions - integer",
+        style=discord.TextStyle.short,
+        placeholder="3",
+        required=True,
+    )
+
+    def __init__(self, message):
+        super().__init__(timeout=None)
+        self.message = message
+
+    async def on_submit(self, interaction: discord.Interaction):
+
+        @tasks.loop(
+            minutes=float(self.time_interval.value),
+            count=int(self.number_repetitions.value),
+        )
+        async def send_repeat_message():
+            await self.message.channel.send(self.message.content)
+
+        send_repeat_message.start()
+
+        await interaction.response.send_message(
+            content=f"Bot is repeating message every **{self.time_interval.value} minutes** for **{self.number_repetitions.value} times** !",
+            ephemeral=True,
+            view=StopRepeatButton(
+                send_repeat_message,
+                self.time_interval.value,
+                self.number_repetitions.value,
+            ),
+        )
+
+    async def on_error(
+        self, interaction: discord.Interaction, error: Exception
+    ) -> None:
+        await interaction.response.send_message(
+            content=f"Wrong data type was received, please enter the correct data type",
+            ephemeral=True,
+        )
+
+
+class StopRepeatButton(discord.ui.View):
+    def __init__(self, loop, interval, count):
+        super().__init__(timeout=None)
+        self.loop = loop
+        self.interval = interval
+        self.count = count
+
+    @discord.ui.button(
+        label="Stop Repeating",
+        emoji="🟥",
+        style=discord.ButtonStyle.gray,
+    )
+    async def stop_repeat_message(
+        self,
+        interaction: discord.Interaction,
+        Button: discord.ui.Button,
+    ):
+        self.loop.cancel()
+        await interaction.response.edit_message(
+            content=f"Bot stopped repeating message", view=None
+        )
 
 
 async def setup(bot: commands.Bot) -> None:

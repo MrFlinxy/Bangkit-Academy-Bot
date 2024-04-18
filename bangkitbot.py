@@ -5,6 +5,7 @@ from typing import Literal
 from os import getenv
 from cogs.radio import ListeningButton
 from cogs.text_ready import bangkit_bot_ready
+from cogs.utilities import RepeatMessage
 
 
 load_dotenv()
@@ -121,15 +122,12 @@ async def bangkitbot(interaction: discord.Interaction):
 # Repeat Message
 @bot.tree.context_menu(name="Repeat Message")
 async def repeat_message(interaction: discord.Interaction, message: discord.Message):
-    await interaction.response.send_message(
-        f"This is your message: \n{message.author}: {message.content}", ephemeral=False
-    )
+    await interaction.response.send_modal(RepeatMessage(message))
 
 
 # Get User Avatar
 @bot.tree.context_menu(name="Get User Avatar")
 async def get_avatar(interaction: discord.Interaction, user: discord.Member):
-    bot.add_view(ListeningButton())
     await interaction.response.send_message(content=user.avatar, ephemeral=False)
 
 
