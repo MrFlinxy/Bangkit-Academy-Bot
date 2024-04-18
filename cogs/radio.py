@@ -253,10 +253,16 @@ class radio(commands.Cog):
     async def radioselect(self, interaction: discord.Interaction):
         if self.states == False:
             if self.cmd_called == False:
-                change_cmd_called(True)
-                await interaction.response.send_message(
-                    view=Select(self.stagelist, self.bot)
-                )
+                if len(self.stagelist) != 0:
+                    change_cmd_called(True)
+                    await interaction.response.send_message(
+                        view=Select(self.stagelist, self.bot)
+                    )
+                else:
+                    await interaction.response.send_message(
+                        content="Bot cannot find any accessible Stage Channel. Try Reloading the bot by ```/reloadbangkitbot```",
+                        ephemeral=True,
+                    )
             else:
                 await interaction.response.send_message(
                     content="Same command is already called, please finish the unfinished command",
