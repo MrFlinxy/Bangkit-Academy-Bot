@@ -122,7 +122,7 @@ async def bangkitbot(interaction: discord.Interaction):
 @bot.tree.context_menu(name="Repeat Message")
 async def repeat_message(interaction: discord.Interaction, message: discord.Message):
     await interaction.response.send_message(
-        f"This is your message: \n{message.author}: {message.content}"
+        f"This is your message: \n{message.author}: {message.content}", ephemeral=False
     )
 
 
@@ -130,7 +130,7 @@ async def repeat_message(interaction: discord.Interaction, message: discord.Mess
 @bot.tree.context_menu(name="Get User Avatar")
 async def get_avatar(interaction: discord.Interaction, user: discord.Member):
     bot.add_view(ListeningButton())
-    await interaction.response.send_message(content=user.avatar)
+    await interaction.response.send_message(content=user.avatar, ephemeral=False)
 
 
 bot.run(bot_token)
