@@ -1,5 +1,5 @@
 import discord
-import aiohttp
+import asyncio
 from discord import app_commands, ui
 from discord.ext import commands, tasks
 
@@ -50,9 +50,15 @@ class RepeatMessage(ui.Modal, title="Repeat Message"):
 
     async def on_submit(self, interaction: discord.Interaction):
         if self.message.content == "":
-            msg_author = self.message.author
-            await self.interaction_check(interaction)
-            await msg_author.send(content="Empty Message")
+            msg_author = (
+                self.message.author
+            )  # Warning: I am not sure why this code works
+            await self.interaction_check(
+                interaction
+            )  # Warning: I am not sure why this code works
+            await msg_author.send(
+                content="Empty Message"
+            )  # Warning: I am not sure why this code works
 
         else:
 
@@ -61,19 +67,29 @@ class RepeatMessage(ui.Modal, title="Repeat Message"):
                 count=int(self.number_repetitions.value),
             )
             async def send_repeat_message():
-                await self.message.channel.send(self.message.content)
+                try:
+                    await self.message.channel.send(self.message.content)
+                except Exception as e:
+                    if e.code == 50001:
+                        if interaction.response.is_done() == False:
+                            await interaction.response.send_message(
+                                content=f"Bot has no Access to this channel",
+                                ephemeral=True,
+                            )
 
             send_repeat_message.start()
 
-            await interaction.response.send_message(
-                content=f"Bot is repeating message every **{self.time_interval.value} minutes** for **{self.number_repetitions.value} times** !",
-                ephemeral=True,
-                view=StopRepeatButton(
-                    send_repeat_message,
-                    self.time_interval.value,
-                    self.number_repetitions.value,
-                ),
-            )
+            if interaction.response.is_done() == False:
+                await asyncio.sleep(2)
+                await interaction.response.send_message(
+                    content=f"Bot is repeating message every **{self.time_interval.value} minutes** for **{self.number_repetitions.value} times** !",
+                    ephemeral=True,
+                    view=StopRepeatButton(
+                        send_repeat_message,
+                        self.time_interval.value,
+                        self.number_repetitions.value,
+                    ),
+                )
 
     async def on_error(
         self, interaction: discord.Interaction, error: Exception
