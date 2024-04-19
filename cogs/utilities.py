@@ -1,4 +1,5 @@
 import discord
+import aiohttp
 from discord import app_commands, ui
 from discord.ext import commands, tasks
 
@@ -9,11 +10,6 @@ class utilities(commands.Cog):
         self.ch_id = 0
         self.listening_status = False
         self.counter = 0
-
-    @app_commands.command(name="utilities", description="Utilities")
-    async def utilities(self, interaction: discord.Interaction):
-        print(type(0x1ABC9C))
-        await interaction.response.send_message(content="Utilities")
 
     @app_commands.command(name="send_embed", description="Send an Embed message")
     async def send_embed(
@@ -71,38 +67,53 @@ class RepeatMessage(ui.Modal, title="Repeat Message"):
         required=True,
     )
 
-    def __init__(self, message):
+    def __init__(self, message: discord.Message):
         super().__init__(timeout=None)
         self.message = message
 
     async def on_submit(self, interaction: discord.Interaction):
+        if self.message.content == "":
+            msg_author = self.message.author
+            await self.interaction_check(interaction)
+            await msg_author.send(content="Empty Message")
 
-        @tasks.loop(
-            minutes=float(self.time_interval.value),
-            count=int(self.number_repetitions.value),
-        )
-        async def send_repeat_message():
-            await self.message.channel.send(self.message.content)
+        else:
 
-        send_repeat_message.start()
+            @tasks.loop(
+                minutes=float(self.time_interval.value),
+                count=int(self.number_repetitions.value),
+            )
+            async def send_repeat_message():
+                await self.message.channel.send(self.message.content)
 
-        await interaction.response.send_message(
-            content=f"Bot is repeating message every **{self.time_interval.value} minutes** for **{self.number_repetitions.value} times** !",
-            ephemeral=True,
-            view=StopRepeatButton(
-                send_repeat_message,
-                self.time_interval.value,
-                self.number_repetitions.value,
-            ),
-        )
+            send_repeat_message.start()
+
+            await interaction.response.send_message(
+                content=f"Bot is repeating message every **{self.time_interval.value} minutes** for **{self.number_repetitions.value} times** !",
+                ephemeral=True,
+                view=StopRepeatButton(
+                    send_repeat_message,
+                    self.time_interval.value,
+                    self.number_repetitions.value,
+                ),
+            )
 
     async def on_error(
         self, interaction: discord.Interaction, error: Exception
     ) -> None:
-        await interaction.response.send_message(
-            content=f"Wrong data type was received, please enter the correct data type",
-            ephemeral=True,
-        )
+        if isinstance(error, ValueError):
+            await interaction.response.send_message(
+                content="Wrong data type was received, please enter the correct data type",
+                ephemeral=True,
+            )
+        if isinstance(error, AttributeError):
+            interaction_author = interaction.user
+            interaction_message = self.message.id
+            interaction_guild = interaction.guild.id
+            interaction_channel = interaction.channel.id
+            await interaction_author.send(
+                content=f"Cannot repeat message on https://discord.com/channels/{interaction_guild}/{interaction_channel}/{interaction_message} message"
+            )
 
 
 class StopRepeatButton(discord.ui.View):
