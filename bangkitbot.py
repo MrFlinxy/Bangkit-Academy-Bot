@@ -5,6 +5,7 @@ from typing import Literal
 from os import getenv
 from cogs.radio import ListeningButton
 from cogs.text_ready import bangkit_bot_ready
+from cogs.utilities import RepeatMessage
 
 
 load_dotenv()
@@ -103,6 +104,13 @@ async def bangkitbot(interaction: discord.Interaction):
     await interaction.response.send_message(
         file=thumbnail_file, embed=embed, ephemeral=True
     )
+
+
+### Context Menu ###
+# Repeat Message
+@bot.tree.context_menu(name="Repeat Message")
+async def repeat_message(interaction: discord.Interaction, message: discord.Message):
+    await interaction.response.send_modal(RepeatMessage(message))
 
 
 bot.run(bot_token)
