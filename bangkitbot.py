@@ -20,6 +20,7 @@ class BangkitBot(commands.Bot):
         super().__init__(*args, **kwargs)
         self.cogslist = [
             "cogs.radio",
+            "cogs.utilities",
         ]
 
     async def on_ready(self):
@@ -43,11 +44,12 @@ bot.remove_command("help")
 @bot.tree.command(name="reloadbangkitbot", description="Reloading Cogs File")
 async def reloadbangkitbot(
     interaction: discord.Interaction,
-    cog: Literal["cogs.radio",] = None,
+    cog: Literal["cogs.radio", "cogs.utilities"] = None,
 ):
     if cog == None:
         for i in [
             "cogs.radio",
+            "cogs.utilities",
         ]:
             await bot.reload_extension(name=i)
         await interaction.response.send_message(
