@@ -29,29 +29,6 @@ class utilities(commands.Cog):
             )
         )
 
-    # Anti Discord Polling Creation
-    @commands.Cog.listener()
-    async def on_message(self, message):
-        role_id_list = [1060927000723865610, 1220559793358504096]
-        try:
-            roles_get = [
-                discord.utils.get(message.guild.roles, id=i) for i in role_id_list
-            ]
-            author_roles = message.author.roles
-            intersect_set = set(roles_get).intersection(set(author_roles))
-
-            if message.attachments == []:
-                if (
-                    message.type == discord.MessageType.chat_input_command
-                    or message.type == discord.MessageType.reply
-                ):
-                    return
-                if message.content == "":
-                    if len(intersect_set) == 0:
-                        await message.delete()
-        except:
-            pass
-
 
 class RepeatMessage(ui.Modal, title="Repeat Message"):
     time_interval = ui.TextInput(
