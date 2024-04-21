@@ -48,6 +48,7 @@ bot.remove_command("help")
 @bot.tree.command(name="reloadbangkitbot", description="Reloading Cogs File")
 async def reloadbangkitbot(
     interaction: discord.Interaction,
+
     cog: Literal[
         # "cogs.channel",
         "cogs.radio",
@@ -125,6 +126,7 @@ async def repeat_message(interaction: discord.Interaction, message: discord.Mess
     await interaction.response.send_modal(RepeatMessage(message))
 
 
+
 # Get User Avatar
 # @bot.tree.context_menu(name="Get User Avatar")
 # async def get_avatar(interaction: discord.Interaction, user: discord.Member):
@@ -132,3 +134,4 @@ async def repeat_message(interaction: discord.Interaction, message: discord.Mess
 
 
 bot.run(bot_token)
+
