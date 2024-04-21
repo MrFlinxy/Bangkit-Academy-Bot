@@ -20,8 +20,11 @@ class BangkitBot(commands.Bot):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.cogslist = [
+            # "cogs.channel",
             "cogs.radio",
+            # "cogs.role",
             "cogs.utilities",
+            # "cogs.verification",
         ]
 
     async def on_ready(self):
@@ -45,12 +48,22 @@ bot.remove_command("help")
 @bot.tree.command(name="reloadbangkitbot", description="Reloading Cogs File")
 async def reloadbangkitbot(
     interaction: discord.Interaction,
-    cog: Literal["cogs.radio", "cogs.utilities"] = None,
+
+    cog: Literal[
+        # "cogs.channel",
+        "cogs.radio",
+        # "cogs.role",
+        "cogs.utilities",
+        # "cogs.verification",
+    ] = None,
 ):
     if cog == None:
         for i in [
+            # "cogs.channel",
             "cogs.radio",
+            # "cogs.role",
             "cogs.utilities",
+            # "cogs.verification",
         ]:
             await bot.reload_extension(name=i)
         await interaction.response.send_message(
@@ -113,4 +126,12 @@ async def repeat_message(interaction: discord.Interaction, message: discord.Mess
     await interaction.response.send_modal(RepeatMessage(message))
 
 
+
+# Get User Avatar
+# @bot.tree.context_menu(name="Get User Avatar")
+# async def get_avatar(interaction: discord.Interaction, user: discord.Member):
+#     await interaction.response.send_message(content=user.avatar, ephemeral=False)
+
+
 bot.run(bot_token)
+
