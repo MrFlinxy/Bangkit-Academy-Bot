@@ -8,12 +8,6 @@ from os.path import exists
 from pathlib import Path
 import pandas as pd
 
-file_fmt = datetime.now().strftime("%d_%b_%Y")
-timestamp_format = "%d.%b %Y %H:%M:%S.%f"
-csv_filename = f"collected_data/{file_fmt}/{file_fmt}"
-pickle_filename = f"collected_data/{file_fmt}/{file_fmt}"
-Path(f"collected_data/{file_fmt}").mkdir(parents=True, exist_ok=True)
-
 
 def change_states(value):
     radio.states = value
@@ -58,9 +52,9 @@ class SelectMenu(discord.ui.Select):
         change_cmd_called(False)
         change_states(True)
 
-        if exists(pickle_filename + ".pkl"):
+        if exists(f"collected_data/{datetime.now().strftime("%d_%b_%Y")}/{datetime.now().strftime("%d_%b_%Y")}" + ".pkl"):
             saved_pickle = open(
-                pickle_filename + ".pkl",
+                f"collected_data/{datetime.now().strftime("%d_%b_%Y")}/{datetime.now().strftime("%d_%b_%Y")}" + ".pkl",
                 "rb",
             )
             memberjoin = pickle.load(saved_pickle)
@@ -71,7 +65,7 @@ class SelectMenu(discord.ui.Select):
             memberjoin = set()
             get_unique_member(self.bot, memberjoin)
             write_pickle = open(
-                pickle_filename + ".pkl",
+                f"collected_data/{datetime.now().strftime("%d_%b_%Y")}/{datetime.now().strftime("%d_%b_%Y")}" + ".pkl",
                 "wb",
             )
             pickle.dump(memberjoin, write_pickle)
@@ -105,10 +99,11 @@ class ListeningButton(discord.ui.View):
     async def get_graph(
         self, interaction: discord.Interaction, Button: discord.ui.Button
     ):
-        if exists(csv_filename + ".csv"):
+        Path(f"collected_data/{datetime.now().strftime("%d_%b_%Y")}").mkdir(parents=True, exist_ok=True)
+        if exists(f"collected_data/{datetime.now().strftime("%d_%b_%Y")}/{datetime.now().strftime("%d_%b_%Y")}" + ".csv"):
             colnames = ["datetime", "listeners", "uniqueUser"]
             radio_df = pd.read_csv(
-                csv_filename + ".csv",
+                f"collected_data/{datetime.now().strftime("%d_%b_%Y")}/{datetime.now().strftime("%d_%b_%Y")}" + ".csv",
                 names=colnames,
                 index_col="datetime",
                 header=None,
@@ -116,16 +111,16 @@ class ListeningButton(discord.ui.View):
             )
 
             radio_df[["listeners", "uniqueUser"]].plot(figsize=(19.2, 10.8))
-            plt.title(f"Radio Bangkit {file_fmt} Listeners")
+            plt.title(f"Radio Bangkit {datetime.now().strftime("%d_%b_%Y")} Listeners")
             plt.grid(color="gray", linestyle="-", linewidth=0.2)
             plt.figtext(0.1, 0.92, f"Listeners peak = {max(radio_df['listeners'])}")
             plt.figtext(0.1, 0.9, f"Unique User count = {max(radio_df['uniqueUser'])}")
-            plt.savefig(f"collected_data/{file_fmt}/{file_fmt}_graph.png")
+            plt.savefig(f"collected_data/{datetime.now().strftime("%d_%b_%Y")}/{datetime.now().strftime("%d_%b_%Y")}_graph.png")
 
-            with open(f"collected_data/{file_fmt}/{file_fmt}_graph.png", "rb") as file:
+            with open(f"collected_data/{datetime.now().strftime("%d_%b_%Y")}/{datetime.now().strftime("%d_%b_%Y")}_graph.png", "rb") as file:
                 await interaction.response.send_message(
                     None,
-                    file=discord.File(file, f"{file_fmt}_graph.png"),
+                    file=discord.File(file, f"{datetime.now().strftime("%d_%b_%Y")}_graph.png"),
                     ephemeral=True,
                 )
 
@@ -150,10 +145,10 @@ class ListeningButton(discord.ui.View):
     ):
         if radio.ch_id != 0:
 
-            if exists(csv_filename + ".csv"):
+            if exists(f"collected_data/{datetime.now().strftime("%d_%b_%Y")}/{datetime.now().strftime("%d_%b_%Y")}" + ".csv"):
                 colnames = ["datetime", "listeners", "uniqueUser"]
                 radio_df = pd.read_csv(
-                    csv_filename + ".csv",
+                    f"collected_data/{datetime.now().strftime("%d_%b_%Y")}/{datetime.now().strftime("%d_%b_%Y")}" + ".csv",
                     names=colnames,
                     index_col="datetime",
                     header=None,
@@ -168,20 +163,20 @@ class ListeningButton(discord.ui.View):
                 )
 
                 radio_df[["listeners", "uniqueUser"]].plot(figsize=(19.2, 10.8))
-                plt.title(f"Radio Bangkit {file_fmt} Listeners")
+                plt.title(f"Radio Bangkit {datetime.now().strftime("%d_%b_%Y")} Listeners")
                 plt.grid(color="gray", linestyle="-", linewidth=0.2)
                 plt.figtext(0.1, 0.92, f"Listeners peak = {max(radio_df['listeners'])}")
                 plt.figtext(
                     0.1, 0.9, f"Unique User count = {max(radio_df['uniqueUser'])}"
                 )
-                plt.savefig(f"collected_data/{file_fmt}/{file_fmt}_graph.png")
+                plt.savefig(f"collected_data/{datetime.now().strftime("%d_%b_%Y")}/{datetime.now().strftime("%d_%b_%Y")}_graph.png")
 
                 with open(
-                    f"collected_data/{file_fmt}/{file_fmt}_graph.png", "rb"
+                    f"collected_data/{datetime.now().strftime("%d_%b_%Y")}/{datetime.now().strftime("%d_%b_%Y")}_graph.png", "rb"
                 ) as file:
                     await interaction.response.send_message(
                         embed=embed,
-                        file=discord.File(file, f"{file_fmt}_graph.png"),
+                        file=discord.File(file, f"{datetime.now().strftime("%d_%b_%Y")}_graph.png"),
                         ephemeral=False,
                     )
 
@@ -287,13 +282,13 @@ class radio(commands.Cog):
 
             if after.channel is not None:
                 if after.channel.id == radio.ch_id:
-                    saved_pickle = open(pickle_filename + ".pkl", "rb")
+                    saved_pickle = open(f"collected_data/{datetime.now().strftime("%d_%b_%Y")}/{datetime.now().strftime("%d_%b_%Y")}" + ".pkl", "rb")
                     memberjoin = pickle.load(saved_pickle)
 
                     memberjoin.add(member.name)
 
                     timestamp = pd.to_datetime(
-                        datetime.now().strftime(timestamp_format)
+                        datetime.now().strftime("%d.%b %Y %H:%M:%S.%f")
                     )
 
                     new_row = pd.DataFrame(
@@ -303,23 +298,23 @@ class radio(commands.Cog):
                     df = pd.DataFrame()
                     df = pd.concat([df, pd.DataFrame(new_row)], ignore_index=True)
                     df.to_csv(
-                        csv_filename + ".csv",
+                        f"collected_data/{datetime.now().strftime("%d_%b_%Y")}/{datetime.now().strftime("%d_%b_%Y")}" + ".csv",
                         mode="a",
                         index=False,
                         header=False,
                     )
 
-                    write_pickle = open(pickle_filename + ".pkl", "wb")
+                    write_pickle = open(f"collected_data/{datetime.now().strftime("%d_%b_%Y")}/{datetime.now().strftime("%d_%b_%Y")}" + ".pkl", "wb")
                     pickle.dump(memberjoin, write_pickle)
                     write_pickle.close()
 
             if before.channel is not None:
                 if before.channel.id == radio.ch_id:
-                    saved_pickle = open(pickle_filename + ".pkl", "rb")
+                    saved_pickle = open(f"collected_data/{datetime.now().strftime("%d_%b_%Y")}/{datetime.now().strftime("%d_%b_%Y")}" + ".pkl", "rb")
                     memberjoin = pickle.load(saved_pickle)
 
                     timestamp = pd.to_datetime(
-                        datetime.now().strftime(timestamp_format)
+                        datetime.now().strftime("%d.%b %Y %H:%M:%S.%f")
                     )
 
                     new_row = pd.DataFrame(
@@ -329,13 +324,13 @@ class radio(commands.Cog):
                     df = pd.DataFrame()
                     df = pd.concat([df, pd.DataFrame(new_row)], ignore_index=True)
                     df.to_csv(
-                        csv_filename + ".csv",
+                        f"collected_data/{datetime.now().strftime("%d_%b_%Y")}/{datetime.now().strftime("%d_%b_%Y")}" + ".csv",
                         mode="a",
                         index=False,
                         header=False,
                     )
 
-                    write_pickle = open(pickle_filename + ".pkl", "wb")
+                    write_pickle = open(f"collected_data/{datetime.now().strftime("%d_%b_%Y")}/{datetime.now().strftime("%d_%b_%Y")}" + ".pkl", "wb")
                     pickle.dump(memberjoin, write_pickle)
                     write_pickle.close()
 
